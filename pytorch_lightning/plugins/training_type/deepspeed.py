@@ -24,7 +24,6 @@ from typing import Any, Dict, Generator, List, Mapping, Optional, Tuple, Union
 import torch
 from torch.nn import Module
 from torch.optim import Optimizer
-from torch.optim.lr_scheduler import _LRScheduler
 
 import pytorch_lightning as pl
 from pytorch_lightning.overrides.base import _LightningModuleWrapperBase
@@ -396,9 +395,7 @@ class DeepSpeedPlugin(DDPPlugin):
         self._set_deepspeed_activation_checkpointing()
         return self.model, [optimizer]
 
-    def _setup_model_and_optimizer(
-        self, model: Module, optimizer: Optimizer, lr_scheduler: Optional[_LRScheduler] = None
-    ):
+    def _setup_model_and_optimizer(self, model: Module, optimizer: Optimizer, lr_scheduler: Optional[Any] = None):
         """Initialize one model and one optimizer with an optional learning rate scheduler.
 
         This calls :func:`deepspeed.initialize` internally.
@@ -443,7 +440,7 @@ class DeepSpeedPlugin(DDPPlugin):
         else:
             self._initialize_deepspeed_inference(model)
 
-    def _init_optimizers(self) -> Tuple[Optimizer, Optional[Union[LRSchedulerTypeTuple]], Optional[int]]:
+    def _init_optimizers(self) -> Tuple[Optimizer, Optional[Any], Optional[int]]:
         optimizers, schedulers, optimizer_frequencies = self.lightning_module.trainer.init_optimizers(
             self.lightning_module
         )
