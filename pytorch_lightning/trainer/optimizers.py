@@ -187,10 +187,9 @@ class TrainerOptimizersMixin(ABC):
                     lr_schedulers.append(
                         {**default_config, "scheduler": scheduler, "reduce_on_plateau": True, "monitor": monitor}
                     )
-                elif isinstance(scheduler, optim.lr_scheduler._LRScheduler):
-                    lr_schedulers.append({**default_config, "scheduler": scheduler})
                 else:
-                    raise ValueError(f'The provided lr scheduler "{scheduler}" is invalid')
+                    lr_schedulers.append({**default_config, "scheduler": scheduler})
+
         return lr_schedulers
 
 
