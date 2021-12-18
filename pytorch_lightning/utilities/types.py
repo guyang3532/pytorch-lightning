@@ -17,9 +17,10 @@ Convention:
  - Types used in public hooks (as those in the `LightningModule` and `Callback`) should be public (no trailing `_`)
 """
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Mapping, Sequence, Union
+from typing import Any, Dict, Iterator, List, Mapping, Sequence, Type, Union
 
 import torch
+from torch.optim.lr_scheduler import _LRScheduler, ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from torchmetrics import Metric
 
