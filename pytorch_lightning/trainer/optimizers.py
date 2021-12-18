@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from abc import ABC
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Protocol, runtime_checkable, Tuple, Union
 
 import torch
 from torch import optim
@@ -23,6 +23,20 @@ import pytorch_lightning as pl
 from pytorch_lightning.core.optimizer import LightningOptimizer
 from pytorch_lightning.utilities import rank_zero_warn
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
+
+
+@runtime_checkable
+class _SupportedLRScheduler(Protocol):
+    """This class is used to detect if an object is stateful using `isinstance(obj, _SupportedLRScheduler)`"""
+
+    def step(self, *args: Any, **kwargs: Any) -> None:
+        ...
+
+    def state_dict(self) -> Dict[str, Any]:
+        ...
+
+    def load_state_dict(self, state_dict: Dict[str, Any]) -> None:
+        ...
 
 
 class TrainerOptimizersMixin(ABC):
@@ -189,6 +203,10 @@ class TrainerOptimizersMixin(ABC):
                     )
                 else:
                     lr_schedulers.append({**default_config, "scheduler": scheduler})
+
+            current_scheduler = lr_schedulers[-1]["scheduler"]
+            if not isinstance(current_scheduler, _SupportedLRScheduler):
+                raise ValueError(f"The provided lr scheduler `{current_scheduler.__class__.__name__}` is not valid.")
 
         return lr_schedulers
 
