@@ -206,7 +206,7 @@ class TrainerOptimizersMixin(ABC):
 
             current_scheduler = lr_schedulers[-1]["scheduler"]
             if not isinstance(current_scheduler, _SupportedLRScheduler):
-                raise ValueError(f"The provided lr scheduler `{current_scheduler.__class__.__name__}` is not valid.")
+                raise ValueError(f"The provided lr scheduler `{current_scheduler.__class__.__name__}` is invalid.")
 
         return lr_schedulers
 
